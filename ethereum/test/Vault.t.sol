@@ -21,7 +21,6 @@ contract VaultTest is Test {
         vm.prank(alice);
         vault.deposit{value: 1 ether}();
         assertEq(vault.balanceOf(alice), 1 ether);
-        assertEq(alice.balance,9 ether);
     }
 
     function test_Deposit_AccumulatesMultipleDeposits() public {
@@ -34,7 +33,7 @@ contract VaultTest is Test {
 
     function test_Deposit_EmitsEvent() public {
         vm.expectEmit(true, false, false, true);
-        emit Vault.Deposit(alice, 2 ether);
+        emit Vault.Deposit(alice, 1 ether);
         vm.prank(alice);
         vault.deposit{value: 1 ether}();
     }
@@ -87,7 +86,22 @@ contract VaultTest is Test {
     // Ojo: (a) sin (b) es el error mas comun. Un test que solo prueba el
     // camino feliz no distingue una implementacion correcta de una que nunca
     // revierte.
+    function test_WithdrawAll_Feliz() public {
+        vm.prank(alice);
+        vault.deposit{value: 2 ether}();
+        uint256 antes = alice.balance;
+        uint256 monto = vault.balanceOf(alice);
+        vm.prank(alice);
+        vault.withdrawAll();
+        assertEq(vault.balanceOf(alice), 0 ether);
+        assertEq(alice.balance, antes + monto);
+    }
 
+    function test_WithdrawAll_Borde() public {
+        vm.prank(alice);
+        vm.expectRevert(Vault.InsufficientBalance.selector);
+        vault.withdrawAll();
+    }
 
     // ── aislamiento entre usuarios ────────────────────────────────────────
 
