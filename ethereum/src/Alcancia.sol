@@ -73,7 +73,17 @@ contract Alcancia {
     //
     // Tu implementación tiene que ser coherente con los tests que escribas.
     //
-    function retirar() external {
-        // TODO: implementar
+    function retirar() external{
+        //check
+        if(ahorros[msg.sender] == 0) revert SinAhorros();
+        uint256 monto = ahorros[msg.sender];
+
+        //effect
+        ahorros[msg.sender] = 0;
+
+        //interaction
+        (bool success, ) = msg.sender.call{value: monto}("");
+        if(!success) revert TransferenciaFallo();
+        emit Retiro(msg.sender, monto);
     }
 }

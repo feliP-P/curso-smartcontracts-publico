@@ -86,18 +86,17 @@ contract VaultTest is Test {
     // Ojo: (a) sin (b) es el error mas comun. Un test que solo prueba el
     // camino feliz no distingue una implementacion correcta de una que nunca
     // revierte.
-    function test_WithdrawAll_Feliz() public {
-        vm.prank(alice);
-        vault.deposit{value: 2 ether}();
+    function test_WithdrawAll_ReducesBalanceToZeroAndSendsEth() public {
+        vm.startPrank(alice);
+        vault.deposit{value: 3 ether}();
         uint256 antes = alice.balance;
-        uint256 monto = vault.balanceOf(alice);
-        vm.prank(alice);
         vault.withdrawAll();
-        assertEq(vault.balanceOf(alice), 0 ether);
-        assertEq(alice.balance, antes + monto);
+        assertEq(vault.balanceOf(alice), 0);
+        assertEq(alice.balance, antes + 3 ether);
+        vm.stopPrank();
     }
 
-    function test_WithdrawAll_Borde() public {
+    function test_WithdrawAll_RevertsOnInsufficientBalance() public {
         vm.prank(alice);
         vm.expectRevert(Vault.InsufficientBalance.selector);
         vault.withdrawAll();

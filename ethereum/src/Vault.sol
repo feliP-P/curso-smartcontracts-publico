@@ -50,15 +50,17 @@ contract Vault {
     //
     function withdrawAll() external {
         // Check
-        if(balances[msg.sender]==0) revert  InsufficientBalance();
-        // Effect:  
-        uint256 saldo = balances[msg.sender];
+        if(balances[msg.sender] == 0) revert InsufficientBalance();
+
+        // Effect
+        uint256 amount = balances[msg.sender];
         balances[msg.sender] = 0;
-        // Interaction:  
-        (bool ok, ) = msg.sender.call{value: saldo}("");
-        if (!ok) revert TransferFailed();
-        emit Withdraw(msg.sender, saldo);
-    }
+
+        // Interaction
+        (bool ok, ) = msg.sender.call{value: amount}("");
+        if(!ok) revert TransferFailed();
+        emit Withdraw(msg.sender, amount);
+            }
 
     function balanceOf(address account) external view returns (uint256) {
         return balances[account];
