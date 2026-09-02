@@ -135,6 +135,7 @@ git pull
 
 ## Referencias principales
 
+- Curso y clases: https://garbervetsky.github.io/curso-sc-dc-26.html
 - *Mastering Ethereum*, **2ª edición (2025)** — Antonopoulos, Wood et al.
 - *"I Can Aiken"* (John Greene) — Aiken hands-on, sin Haskell
 - *Cyfrin Updraft* (`updraft.cyfrin.io`) — auditoría, seguridad y verificación formal
