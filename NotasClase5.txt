@@ -1,0 +1,2 @@
+3 actores: el que maneja el datum, el que maneja/armó la transacción, y el validador 
+c2d2
